@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.views.generic.base import TemplateView
 from django.views.decorators.csrf import csrf_exempt
-import redis
 from ws4redis import settings as redis_settings
+import redis
 
 class Base(TemplateView):
     def __init__(self):
@@ -12,7 +12,7 @@ class Base(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(Base, self).get_context_data(**kwargs)
-        context.update(ws_url = 'ws://{SERVER_NAME}:{SERVER_PORT}/stream/ws'.format(**self.request.META))
+        context.update(ws_url = 'ws://{SERVER_NAME}:{SERVER_PORT}/ws/stream'.format(**self.request.META))
         return context
 
 class Broadcast(Base):
@@ -20,4 +20,4 @@ class Broadcast(Base):
 
     def __init__(self):
         super(Broadcast, self).__init__()
-        self.connection.set('_broadcast_:ws', 'Init')
+        self.connection.set('_broadcast_:stream', 'Init')
