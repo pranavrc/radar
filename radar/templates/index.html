@@ -49,15 +49,21 @@
 
                 function getLocation () {
                     if (navigator.geolocation) {
-                        navigator.geolocation.watchPosition(showPosition, errHandler, {timeout: 30000});
+                        navigator.geolocation.watchPosition(showPosition, errHandler, {timeout: 3000});
                     } else {
                         setStatus('Geolocation is not supported by this browser.');
                     }
                 }
 
                 function showPosition(position) {
-                    var markerPos = new L.LatLng(position.coords.latitude, position.coords.longitude);
-                    console.log(markerPos);
+                    var x = position.coords.latitude;
+                    var y = position.coords.longitude;
+                    var markerPos = new L.LatLng(x, y);
+                    console.log(x, y);
+
+                    $.ajax({type:'POST', url:'/', data:{"position": 'foo'}, success: function (response) {
+                            console.log(response);
+                    }});
                     map.setView(markerPos, 15);
 
                     marker = new L.CircleMarker(markerPos).addTo(map);
