@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 
 from django.contrib import admin
-from gpserve.views import Broadcast
+from views import Broadcast
 admin.autodiscover()
 
 urlpatterns = patterns('',
