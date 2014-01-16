@@ -9,10 +9,13 @@ import redis
 class Base(TemplateView):
     def __init__(self):
         self.connection = redis.StrictRedis(**redis_settings.WS4REDIS_CONNECTION)
+        print self.connection
 
     def get_context_data(self, **kwargs):
         context = super(Base, self).get_context_data(**kwargs)
+        print context
         context.update(ws_url = 'ws://{SERVER_NAME}:{SERVER_PORT}/ws/stream'.format(**self.request.META))
+        print context
         return context
 
 class Broadcast(Base):
