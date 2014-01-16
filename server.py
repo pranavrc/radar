@@ -17,10 +17,15 @@ def event_stream():
 def sse_request():
     return Response(event_stream(), mimetype='text/event-stream')
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    if request.method == 'GET':
+        return render_template('index.html')
+    if request.method == 'POST':
+        print request.form('position');
 
 if __name__ == "__main__":
-    http_server = WSGIServer(('127.0.0.1', 8000), app)
-    http_server.serve_forever()
+    #http_server = WSGIServer(('127.0.0.1', 8000), app)
+    #http_server.serve_forever()
+    app.debug = True
+    app.run()
