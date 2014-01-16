@@ -45,11 +45,51 @@
                 var map = L.map('map');
                 tilelayer.addTo(map);
                 map.invalidateSize();
+
+                var ws, timeout = null;
+                connect();
                 getLocation();
+
+                function connect () {
+                    try {
+                        ws = new WebSocket('{{ ws_url }}?subscribe-broadcast&publish-broadcast');
+                        ws.onopen = ws_onopen;
+                        ws.onmessage = ws_onmessage;
+                        ws.onerror = ws_onerror;
+                        ws.onclose = ws_onclose;
+                        timeout = null;
+                    } catch (err) {
+                        console.log(err + "\nReconnecting...");
+                        timeout = setTimeout(connect, 5000);
+                    }
+                }
+
+                function ws_onopen () {
+                    console.log("Connection established: " + ws.url);
+                }
+
+                function ws_onerror (e) {
+                    console.warn("Connection broken.");
+                    if (!timeout) {
+                        timeout = setTimeout(connect, 1000);
+                    }
+                }
+
+                function ws_onmessage (message) {
+                    var pos = JSON.parse(message.data);
+                    console.log(pos.x, pos.y);
+                }
+
+                function ws_onclose (e) {
+                    console.log("Connection terminated.");
+                    if (!timeout) {
+                        timeout = setTimeout(connect, 1000);
+                    }
+                }
 
                 function getLocation () {
                     if (navigator.geolocation) {
-                        navigator.geolocation.watchPosition(showPosition, errHandler, {timeout: 3000});
+                        navigator.geolocation.watchPosition(showPosition, errHandler, {timeout: 10000});
                     } else {
                         setStatus('Geolocation is not supported by this browser.');
                     }
@@ -59,11 +99,9 @@
                     var x = position.coords.latitude;
                     var y = position.coords.longitude;
                     var markerPos = new L.LatLng(x, y);
-                    console.log(x, y);
 
-                    $.ajax({type:'POST', url:'/', data:{"position": 'foo'}, success: function (response) {
-                            console.log(response);
-                    }});
+                    ws.send(JSON.stringify({'x': x, 'y': y}));
+
                     map.setView(markerPos, 15);
 
                     marker = new L.CircleMarker(markerPos).addTo(map);
@@ -81,10 +119,10 @@
                     $('#map').append('<div id="status">' + statusMsg + '</div>');
                 }
 
-                var ssEvent = new EventSource('/stream');
+                /*var ssEvent = new EventSource('/stream');
                 ssEvent.onmessage = function (message) {
                     console.log(message);
-                }
+                }*/
             });
         </script>
     </body>
