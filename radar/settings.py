@@ -41,7 +41,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ws4redis',
-    'gpserve'
+    'radar'
 )
 
 # Websocket URL.
@@ -65,9 +65,6 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'radar.urls'
 
-WSGI_APPLICATION = 'radar.wsgi.application'
-
-
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
@@ -90,7 +87,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
