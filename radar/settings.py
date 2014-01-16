@@ -45,7 +45,7 @@ INSTALLED_APPS = (
 )
 
 # Websocket URL.
-WEBSOCKET_URL = '/stream/'
+WEBSOCKET_URL = '/ws/'
 
 # Set the number of seconds each message shall persisted
 WS4REDIS_EXPIRE = 3600
