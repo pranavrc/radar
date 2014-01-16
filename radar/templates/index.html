@@ -89,7 +89,9 @@
 
                 function getLocation () {
                     if (navigator.geolocation) {
-                        navigator.geolocation.watchPosition(showPosition, errHandler, {timeout: 10000});
+                        var interval = setInterval(function () {
+                            navigator.geolocation.getCurrentPosition(showPosition, errHandler, {timeout: 10000});
+                        }, 1000);
                     } else {
                         setStatus('Geolocation is not supported by this browser.');
                     }
