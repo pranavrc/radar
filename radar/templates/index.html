@@ -121,10 +121,14 @@
                     $('#map').append('<div id="status">' + statusMsg + '</div>');
                 }
 
-                /*var ssEvent = new EventSource('/stream');
-                ssEvent.onmessage = function (message) {
-                    console.log(message);
-                }*/
+                function randomize(min, max) {
+                    // Reimplemented from http://stackoverflow.com/a/10727155
+                    var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+                    var length = Math.floor(Math.random() * (max - min + 1)) + min;
+                    var result = '';
+                    for (var i = length; i > 0; --i) result += chars[Math.round(Math.random() * (chars.length - 1))];
+                    return result;
+                }
             });
         </script>
     </body>
