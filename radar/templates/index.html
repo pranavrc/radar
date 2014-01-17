@@ -101,6 +101,11 @@
                     }
                 }
 
+                function currTime () {
+                    var time = new Date();
+                    return time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+                }
+
                 function getLocation () {
                     if (navigator.geolocation) {
                         var interval = setInterval(function () {
