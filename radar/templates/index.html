@@ -85,15 +85,16 @@
                 function ws_onmessage (message) {
                     var pos = JSON.parse(message.data);
                     var markerPos = new L.LatLng(pos.x, pos.y);
+                    var marker = new L.CircleMarker(markerPos);
+                    marker.bindPopup(pos.name + "<br />" + currTime());
+                    marker.addTo(map);
 
                     if (pos.id in data) {
+                        data[pos.id].markers.push(marker);
                         data[pos.id].polyline.addLatLng(markerPos);
                     } else {
                         data[pos.id] = {}
-                        var marker = new L.CircleMarker(markerPos);
                         var polyline = new L.polyline(markerPos);
-                        marker.bindPopup(pos.name + "<br />" + currTime());
-                        marker.addTo(map);
                         polyline.addTo(map);
                         data[pos.id].markers = []
                         data[pos.id].markers.push(marker);
