@@ -77,7 +77,21 @@
 
                 function ws_onmessage (message) {
                     var pos = JSON.parse(message.data);
-                    console.log(pos.x, pos.y);
+                    var markerPos = new L.LatLng(pos.x, pos.y);
+
+                    if (pos.id in data) {
+                        data[pos.id].polyline.addLatLng(markerPos);
+                    } else {
+                        data[pos.id] = {}
+                        var marker = new L.CircleMarker(markerPos);
+                        var polyline = new L.polyline(markerPos);
+                        marker.bindPopup(pos.name + "<br />" + currTime());
+                        marker.addTo(map);
+                        polyline.addTo(map);
+                        data[pos.id].markers = []
+                        data[pos.id].markers.push(marker);
+                        data[pos.id].polyline = polyline;
+                    }
                 }
 
                 function ws_onclose (e) {
