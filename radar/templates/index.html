@@ -116,23 +116,43 @@
                     }
                 }
 
+                function exists (arr, key, value) {
+                    var hasElem = false;
+                    $.each(arr, function (i, v) {
+                        if (v[key] == value) {
+                            hasElem = true;;
+                        }
+                    });
+
+                    return hasElem;
+                }
+
                 function showPosition(position) {
                     var x = position.coords.latitude;
                     var y = position.coords.longitude;
                     var markerPos = new L.LatLng(x, y);
 
-                    ws.send(JSON.stringify({'x': x, 'y': y}));
-
-                    map.setView(markerPos, 15);
-
-                    marker = new L.CircleMarker(markerPos).addTo(map);
+                    if (!(x == prevX && y == prevY)) {
+                        ws.send(JSON.stringify({'name': name, 'id': id, 'x': x, 'y': y}));
+                        prevX = x;
+                        prevY = y;
+                    }
                 }
 
                 function errHandler (err) {
-                    if (err.code == 1) {
-                        setStatus('Access is denied');
-                    } else if (err.code == 2) {
-                        setStatus('Position unavailable');
+                    switch (err.code) {
+                        case err.PERMISSION_DENIED:
+                            setStatus("Request Denied");
+                            break;
+                        case err.POSITION_UNAVAILABLE:
+                            setStatus("Information unavailable");
+                            break;
+                        case err.TIMEOUT:
+                            setStatus("Request timed out");
+                            break;
+                        case err.UNKNOWN_ERROR:
+                            setStatus("Unknown error");
+                            break;
                     }
                 }
 
