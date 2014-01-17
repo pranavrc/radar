@@ -14,6 +14,6 @@ class Broadcast(TemplateView):
         self.connection = redis.StrictRedis(**redis_settings.WS4REDIS_CONNECTION)
 
     def get_context_data(self, **kwargs):
-        context = super(Base, self).get_context_data(**kwargs)
+        context = super(Broadcast, self).get_context_data(**kwargs)
         context.update(ws_url = 'ws://{SERVER_NAME}:{SERVER_PORT}/ws/stream'.format(**self.request.META))
         return context
