@@ -51,6 +51,7 @@
                 var map = L.map('map');
                 tilelayer.addTo(map);
                 map.invalidateSize();
+                map.fitWorld();
 
                 var ws, timeout = null;
                 connect();
