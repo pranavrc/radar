@@ -38,6 +38,12 @@
 
         <script>
             $(document).ready(function () {
+                var name = prompt("Name:");
+                var id = randomize(10, 10);
+                var prevX = 0;
+                var prevY = 0;
+
+                var data = {};
                 var osm = '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>';
                 var tilelayer = L.tileLayer('http://a.tile2.opencyclemap.org/transport/{z}/{x}/{y}.png', {
                     attribution: '&copy; OpenCycleMap, ' + 'Map data ' + osm
