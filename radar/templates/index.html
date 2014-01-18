@@ -14,11 +14,17 @@
 
     <body>
         <div id="map" style="width:100%;height:100%">
-            <input id="name" type="text" placeholder="Enter name">
-            <button id="go">Go</button>
+            <div id="input">
+                <input id="name" type="text" placeholder="Enter name">
+                <input id="go" type="button" value="Go">
+            </div>
         </div>
 
         <script>
+            $(document).ready(function () {
+                $('#name').focus();
+            });
+
             $('#go').click(function () {
                 var name = $('#name').val();
                 var id = randomize(10, 10);
