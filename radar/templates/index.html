@@ -65,7 +65,7 @@
                     var pos = JSON.parse(message.data);
                     var markerPos = new L.LatLng(pos.x, pos.y);
                     var marker = new L.CircleMarker(markerPos);
-                    marker.bindPopup(pos.name + "<br />" + currTime());
+                    marker.bindPopup("<strong>" + pos.name + "</strong>" + "<br />" + currTime());
                     marker.addTo(map);
 
                     if (pos.id in data) {
