@@ -26,11 +26,18 @@
             });
 
             $('#go').click(function () {
+                // Get input name.
                 var name = $('#name').val();
+
+                // Create a random ID to identify device (could be done in the backend with sessions,
+                // but oh well).
                 var id = randomize(10, 10);
+
+                // Variables to track position updates and check for changes in iterations.
                 var prevX = 0;
                 var prevY = 0;
 
+                // Data object and tilelayer and map.
                 var data = {};
                 var osm = '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>';
                 var tilelayer = L.tileLayer('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -48,6 +55,7 @@
                 getLocation();
 
                 function connect () {
+                    // Connect to backend through pubsub websocket
                     try {
                         ws = new WebSocket('{{ ws_url }}?subscribe-broadcast&publish-broadcast');
                         ws.onopen = ws_onopen;
@@ -57,7 +65,7 @@
                         timeout = null;
                     } catch (err) {
                         console.log(err + "\nReconnecting...");
-                        timeout = setTimeout(connect, 5000);
+                        timeout = setTimeout(connect, 5000); // retry every 5 seconds
                     }
                 }
 
@@ -73,12 +81,15 @@
                 }
 
                 function ws_onmessage (message) {
+                    // Update map on receiving a socket message.
                     var pos = JSON.parse(message.data);
                     var markerPos = new L.LatLng(pos.x, pos.y);
                     var marker = new L.CircleMarker(markerPos);
                     marker.bindPopup("<strong>" + pos.name + "</strong>" + "<br />" + currTime());
                     marker.addTo(map);
 
+                    // If client's location has already been tracked, add marker for
+                    // current position and extend polyline. Otherwise, create a new marker.
                     if (pos.id in data) {
                         data[pos.id].markers.push(marker);
                         data[pos.id].polyline.addLatLng(markerPos);
@@ -100,11 +111,13 @@
                 }
 
                 function currTime () {
+                    // Time in HH:MM:SS format.
                     var time = new Date();
                     return time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
                 }
 
                 function getLocation () {
+                    // Continuously monitor GPS location.
                     if (navigator.geolocation) {
                         var interval = setInterval(function () {
                             navigator.geolocation.getCurrentPosition(showPosition, errHandler, {timeout: 10000});
@@ -115,6 +128,7 @@
                 }
 
                 function exists (arr, key, value) {
+                    // Check if key-value pair exists in array of key-value pairs.
                     var hasElem = false;
                     $.each(arr, function (i, v) {
                         if (v[key] == value) {
@@ -126,6 +140,7 @@
                 }
 
                 function showPosition(position) {
+                    // Send a message if coords have changed, otherwise don't.
                     var x = position.coords.latitude;
                     var y = position.coords.longitude;
                     var markerPos = new L.LatLng(x, y);
@@ -155,6 +170,7 @@
                 }
 
                 function setStatus (statusMsg) {
+                    // Status at the bottom of the page.
                     $('#map').append('<div id="status">' + statusMsg + '</div>');
                 }
 
