@@ -1,0 +1,7 @@
+django
+gevent
+django-websocket-redis
+redis
+uwsgi
+greenlet
+wsaccel
