@@ -26,8 +26,9 @@
             });
 
             $('#go').click(function () {
-                // Get input name.
+                // Get input name and generate random color.
                 var name = $('#name').val();
+                var color = get_random_color();
 
                 // Create a random ID to identify device (could be done in the backend with sessions,
                 // but oh well).
@@ -84,7 +85,7 @@
                     // Update map on receiving a socket message.
                     var pos = JSON.parse(message.data);
                     var markerPos = new L.LatLng(pos.x, pos.y);
-                    var marker = new L.CircleMarker(markerPos);
+                    var marker = new L.CircleMarker(markerPos, { color: pos.color });
                     marker.bindPopup("<strong>" + pos.name + "</strong>" + "<br />" + currTime());
                     marker.addTo(map);
 
@@ -95,7 +96,7 @@
                         data[pos.id].polyline.addLatLng(markerPos);
                     } else {
                         data[pos.id] = {}
-                        var polyline = new L.polyline(markerPos);
+                        var polyline = new L.polyline(markerPos, { color: pos.color });
                         polyline.addTo(map);
                         data[pos.id].markers = []
                         data[pos.id].markers.push(marker);
@@ -146,7 +147,7 @@
                     var markerPos = new L.LatLng(x, y);
 
                     if (!(x == prevX && y == prevY)) {
-                        ws.send(JSON.stringify({'name': name, 'id': id, 'x': x, 'y': y}));
+                        ws.send(JSON.stringify({'name': name, 'color': color, 'id': id, 'x': x, 'y': y}));
                         prevX = x;
                         prevY = y;
                     }
@@ -181,6 +182,16 @@
                     var result = '';
                     for (var i = length; i > 0; --i) result += chars[Math.round(Math.random() * (chars.length - 1))];
                     return result;
+                }
+
+                function get_random_color() {
+                    // Reimplemented from http://stackoverflow.com/a/1484514
+                    var letters = '0123456789ABCDEF'.split('');
+                    var color = '#';
+                    for (var i = 0; i < 6; i++ ) {
+                        color += letters[Math.round(Math.random() * 15)];
+                    }
+                    return color;
                 }
             });
         </script>
